@@ -1,0 +1,2 @@
+INSERT INTO currency (code, name, national_currency, exchange_rate, status) VALUES ('PEN', 'Soles', true, 1, true);
+INSERT INTO currency (code, name, national_currency, exchange_rate, status) VALUES ('USD', 'Dólares', false, 3.519, true);
