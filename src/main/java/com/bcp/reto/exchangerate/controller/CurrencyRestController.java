@@ -29,6 +29,15 @@ public class CurrencyRestController {
                 .map(ResponseEntity::ok);
     }
 
+
+    @PostMapping("/saveall")
+    public Single<ResponseEntity<List<CurrencyResponseDto>>> saveAll(
+            @RequestBody List<CurrencyRequestDto> dtos) {
+        return currencyService.saveAll(dtos).subscribeOn(Schedulers.io())
+                .map(ResponseEntity::ok);
+    }
+
+
     @PutMapping(value = "/{id}")
     public Single<ResponseEntity<CurrencyResponseDto>> update(@PathVariable(value = "id") Long id,
                                                               @RequestBody CurrencyRequestDto currencyRequestDto) {

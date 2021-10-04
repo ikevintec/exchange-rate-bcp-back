@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,6 +80,33 @@ public class CurrencyServiceImpl implements CurrencyService {
                 catchMethod(singleSubscriber, ex);
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public Single<List<CurrencyResponseDto>> saveAll(List<CurrencyRequestDto> dtos) {
+        List<Currency> currenciesExist = repository.findAllListByCode(
+                dtos.stream().map(CurrencyRequestDto::getCode).collect(Collectors.toList())
+        );
+        List<Currency> currenciesResult = new ArrayList<>();
+        dtos.forEach(dto -> {
+            currenciesExist.stream().filter(ce -> ce.getCode().equals(dto.getCode())).findAny().ifPresentOrElse(ce -> {
+                ce.setNationalCurrency(dto.getNationalCurrency());
+                ce.setName(dto.getName());
+                ce.setExchangeRate(dto.getExchangeRate());
+                currenciesResult.add(repository.save(ce));
+
+            }, () -> {
+                Currency entity = transformToEntity(dto);
+                entity.setStatus(true);
+                currenciesResult.add(repository.save(entity));
+            });
+        });
+
+        return Single.create(singleSubscriber -> {
+            singleSubscriber.onSuccess(currenciesResult.stream().map(this::transformToDto).collect(Collectors.toList()));
+        });
+
     }
 
     @Override

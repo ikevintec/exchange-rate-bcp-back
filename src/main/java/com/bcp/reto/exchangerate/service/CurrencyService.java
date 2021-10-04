@@ -21,6 +21,8 @@ public interface CurrencyService {
 
     Single<CurrencyResponseDto> save(CurrencyRequestDto dto);
 
+    Single<List<CurrencyResponseDto>> saveAll(List<CurrencyRequestDto> dto);
+
     Single<CurrencyResponseDto> update(Long id, CurrencyRequestDto model);
 
     Completable delete(Long id);

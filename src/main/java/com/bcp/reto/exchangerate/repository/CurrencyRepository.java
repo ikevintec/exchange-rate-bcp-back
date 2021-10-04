@@ -26,6 +26,14 @@ public interface CurrencyRepository extends JpaRepository<Currency, Long> {
                                       @Param("targetCode") String targetCode);
 
 
+    @Query(value = "SELECT p FROM Currency p " +
+            " where p.code in :code " +
+            " and p.status = true " +
+            " order by p.nationalCurrency desc"
+    )
+    List<Currency> findAllListByCode(@Param("code") List<String> code);
+
+
     Optional<Currency> findByIdAndStatusIsTrue(Long id);
 
     Optional<Currency> findByCodeAndStatusIsTrue(String code);

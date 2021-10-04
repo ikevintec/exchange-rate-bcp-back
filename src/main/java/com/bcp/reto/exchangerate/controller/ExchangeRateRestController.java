@@ -25,7 +25,7 @@ public class ExchangeRateRestController {
 
 
     @PostMapping
-    public Single<ResponseEntity<ExchangeRateResponseDto>> save(
+    public Single<ResponseEntity<ExchangeRateResponseDto>> exchange(
             @RequestBody ExchangeRateRequestDto exchangeRateRequestDto) {
         return exchangeRateService.exchange(exchangeRateRequestDto).subscribeOn(Schedulers.io())
                 .map(ResponseEntity::ok);
